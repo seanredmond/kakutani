@@ -42,5 +42,27 @@ describe Kakutani::Client do
       end
 
     end
+
+    context "with a hash as parameter" do
+      before :each do
+        @r = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
+                    :status => 200)
+        allow_any_instance_of(Faraday::Connection).to receive(:get).
+          and_return(@r)
+      end
+
+      context "including :isbn" do
+        it "should call #reviews_by_isbn" do
+          expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
+          @client.reviews({:isbn => '9781446484197'})
+        end
+
+        it "should use :isb over other parameters" do
+          expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
+          expect(@client).not_to receive(:reviews_by_title).with('1Q84')
+          @client.reviews({:isbn => '9781446484197', :title => '1Q84'})
+        end
+      end
+    end
   end
 end
