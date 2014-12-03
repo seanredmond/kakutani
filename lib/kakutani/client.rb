@@ -9,10 +9,14 @@ module Kakutani
     end
 
     def reviews(spec)
+      revs = nil
       if spec.is_a?(Hash)
-        return reviews_by_isbn(spec[:isbn]) if spec.has_key?(:isbn)
+        revs = reviews_by_isbn(spec[:isbn]) if spec.has_key?(:isbn)
+      else
+        revs = reviews_by_isbn(spec)
       end
-      reviews_by_isbn(spec)
+ 
+      revs.map{|r| Kakutani::Review.new(r)}
     end
 
     def reviews_by_isbn(isbn)
