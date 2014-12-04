@@ -15,6 +15,8 @@ module Kakutani
           revs = reviews_by_isbn(spec[:isbn]) 
         elsif spec.has_key?(:title)
           revs = reviews_by_title(spec[:title])
+        elsif spec.has_key?(:author)
+          revs = reviews_by_author(spec[:author])
         else
           raise ParameterError.new(
             "No recognized parameter in #{spec.keys.join(', ')}"
@@ -43,6 +45,10 @@ module Kakutani
 
     def reviews_by_title(title)
       return get_endpoint("reviews", {:title => title})
+    end
+
+    def reviews_by_author(author)
+      return get_endpoint("reviews", {:author => author})
     end
 
     def get_endpoint(path, params={})

@@ -50,13 +50,6 @@ describe Kakutani::Client do
 
     context "with a hash as parameter" do
       context "including :isbn" do
-        before :each do
-          @r = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
-                      :status => 500)
-          allow_any_instance_of(Faraday::Connection).to receive(:get).
-            and_return(@r)
-        end
-
         it "should call #reviews_by_isbn" do
           expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
             .and_return({})
@@ -72,13 +65,6 @@ describe Kakutani::Client do
       end
 
       context "including :title" do
-        before :each do
-          @r = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
-                      :status => 500)
-          allow_any_instance_of(Faraday::Connection).to receive(:get).
-            and_return(@r)
-        end
-
         it "should call #reviews_by_title" do
           expect(@client).to receive(:reviews_by_title).with('Gone Girl')
             .and_return({})
@@ -89,6 +75,28 @@ describe Kakutani::Client do
           expect(@client).to receive(:reviews_by_title).with('Gone Girl')
             .and_return({})
           @client.reviews({:title => 'Gone Girl', :author => 'Gillian Flynn'})
+        end
+      end
+
+      context "including :author" do
+        it "should call #reviews_by_author" do
+          expect(@client).to receive(:reviews_by_author)
+            .with('Haruki Murakami')
+            .and_return({})
+          @client.reviews({:author => 'Haruki Murakami'})
+        end
+
+        it "should make a request with the author parameter" do
+          expect_any_instance_of(Faraday::Connection)
+            .to receive(:get)
+            .with("/svc/books/v3/reviews.json",
+                  hash_including(:author => 'Haruki Murakami'))
+            .and_return(double(Faraday::Response, 
+                               :body => ISBN_1Q84, 
+                               :headers => {},
+                               :status => 200)
+                        )
+          @client.reviews({:author => 'Haruki Murakami'})
         end
       end
 
