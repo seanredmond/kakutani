@@ -4,23 +4,28 @@ describe Kakutani::Client do
   before :each do
     @client = Kakutani::Client.new('fakeapikey')
 
-    # Monkey-patch Client object so we can mock the connection
-    def @client.conn=(c)
-      @conn = c
-    end
+    @response = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
+                       :status => 200)
 
-    def @client.conn
-      @conn
-    end
+    allow_any_instance_of(Faraday::Connection).to receive(:get).
+      and_return(@response)
   end
 
   describe "#reviews" do
     context "with an ISBN as the only parameter" do
-      before :each do
-        @r = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
-                    :status => 200)
-        allow_any_instance_of(Faraday::Connection).to receive(:get).
-          and_return(@r)
+      it "should make a request with the isbn URL" do
+        expect_any_instance_of(Faraday::Connection)
+          .to receive(:get)
+          .with("/svc/books/v3/reviews/9781446484197.json", 
+                instance_of(Hash))
+          .and_return(@response)
+        @client.reviews('9781446484197')
+      end
+
+      it "should call #reviews_by_isbn" do
+        expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
+          .and_return({})
+        @client.reviews('9781446484197')
       end
 
       it "should return an array" do
@@ -62,6 +67,15 @@ describe Kakutani::Client do
 
           @client.reviews({:isbn => '9781446484197', :title => '1Q84'})
         end
+
+        it "should make a request with the isbn URL" do
+          expect_any_instance_of(Faraday::Connection)
+            .to receive(:get)
+            .with("/svc/books/v3/reviews/9781446484197.json", 
+                  instance_of(Hash))
+            .and_return(@response)
+          @client.reviews({:isbn => '9781446484197'})
+        end
       end
 
       context "including :title" do
@@ -75,6 +89,15 @@ describe Kakutani::Client do
           expect(@client).to receive(:reviews_by_title).with('Gone Girl')
             .and_return({})
           @client.reviews({:title => 'Gone Girl', :author => 'Gillian Flynn'})
+        end
+
+        it "should make a request with the title parameter" do
+          expect_any_instance_of(Faraday::Connection)
+            .to receive(:get)
+            .with("/svc/books/v3/reviews.json",
+                  hash_including(:title => 'Gone Girl'))
+            .and_return(@response)
+          @client.reviews({:title => 'Gone Girl'})
         end
       end
 
@@ -91,11 +114,7 @@ describe Kakutani::Client do
             .to receive(:get)
             .with("/svc/books/v3/reviews.json",
                   hash_including(:author => 'Haruki Murakami'))
-            .and_return(double(Faraday::Response, 
-                               :body => ISBN_1Q84, 
-                               :headers => {},
-                               :status => 200)
-                        )
+            .and_return(@response)
           @client.reviews({:author => 'Haruki Murakami'})
         end
       end
