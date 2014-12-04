@@ -16,14 +16,21 @@ describe Kakutani::Client do
       it "should make a request with the isbn URL" do
         expect_any_instance_of(Faraday::Connection)
           .to receive(:get)
-          .with("/svc/books/v3/reviews/9781446484197.json", 
-                instance_of(Hash))
+          .with("/svc/books/v3/reviews.json", 
+                hash_including(:isbn => '9781446484197'))
           .and_return(@response)
         @client.reviews('9781446484197')
       end
 
       it "should call #reviews_by_isbn" do
         expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
+          .and_return({})
+        @client.reviews('9781446484197')
+      end
+
+      it "should call #reviews_by_hash" do
+        expect(@client).to receive(:reviews_by_hash)
+          .with(hash_including(:isbn => '9781446484197'))
           .and_return({})
         @client.reviews('9781446484197')
       end
