@@ -4,9 +4,16 @@ module Kakutani
 
     def initialize(data)
       @data = data
-      @published = DateTime
-        .strptime(data['publication_dt'], '%Y-%m-%d %H:%M:%S').to_date
+      @published = parse_date(data['publication_dt'])
       @isbns = data['isbn13']
+    end
+
+    def parse_date(dt)
+      DateTime.strptime(dt, '%Y-%m-%d %H:%M:%S').to_date
+
+      # Sometimes the API returns invalid dates
+      rescue ArgumentError
+        return nil
     end
 
     # Any property of the resource present in the JSON response can be accessed

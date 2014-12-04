@@ -47,4 +47,14 @@ describe Kakutani::Review do
       expect(@review.isbns.first).to eq "9781446484203"
     end
   end
+
+  describe "#parse_date" do
+    it "converts JSON time to correct Date" do
+      expect(@review.parse_date("2011-11-10 00:00:00")).to eq Date.new(2011,11,10)
+    end
+
+    it "returns nil when given a bad date" do
+      expect(@review.parse_date("0000-00-00 00:00:00")).to be_nil
+    end
+  end
 end
