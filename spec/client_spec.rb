@@ -54,68 +54,25 @@ describe Kakutani::Client do
     end
 
     context "with a hash as parameter" do
-      context "including :isbn" do
-        it "should call #reviews_by_isbn" do
-          expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
+      context "with good parameters" do
+        it "should call #reviews_by_hash" do
+          expect(@client).to receive(:reviews_by_hash)
+            .with(hash_including(:isbn => '12345', :title => 'title',
+                                 :author => 'author'))
             .and_return({})
-          @client.reviews({:isbn => '9781446484197'})
+          @client.reviews({:isbn => '12345', :title => 'title',
+                            :author => 'author'})
         end
 
-        it "should use :isbn over other parameters" do
-          expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
-            .and_return({})
-
-          @client.reviews({:isbn => '9781446484197', :title => '1Q84'})
-        end
-
-        it "should make a request with the isbn URL" do
+        it "should make a request with the right parameters" do
           expect_any_instance_of(Faraday::Connection)
             .to receive(:get)
-            .with("/svc/books/v3/reviews/9781446484197.json", 
-                  instance_of(Hash))
+            .with("/svc/books/v3/reviews.json", 
+                  hash_including(:isbn => '12345', :title => 'title',
+                                 :author => 'author'))
             .and_return(@response)
-          @client.reviews({:isbn => '9781446484197'})
-        end
-      end
-
-      context "including :title" do
-        it "should call #reviews_by_title" do
-          expect(@client).to receive(:reviews_by_title).with('Gone Girl')
-            .and_return({})
-          @client.reviews({:title => 'Gone Girl'})
-        end
-
-        it "should use :title over :author" do
-          expect(@client).to receive(:reviews_by_title).with('Gone Girl')
-            .and_return({})
-          @client.reviews({:title => 'Gone Girl', :author => 'Gillian Flynn'})
-        end
-
-        it "should make a request with the title parameter" do
-          expect_any_instance_of(Faraday::Connection)
-            .to receive(:get)
-            .with("/svc/books/v3/reviews.json",
-                  hash_including(:title => 'Gone Girl'))
-            .and_return(@response)
-          @client.reviews({:title => 'Gone Girl'})
-        end
-      end
-
-      context "including :author" do
-        it "should call #reviews_by_author" do
-          expect(@client).to receive(:reviews_by_author)
-            .with('Haruki Murakami')
-            .and_return({})
-          @client.reviews({:author => 'Haruki Murakami'})
-        end
-
-        it "should make a request with the author parameter" do
-          expect_any_instance_of(Faraday::Connection)
-            .to receive(:get)
-            .with("/svc/books/v3/reviews.json",
-                  hash_including(:author => 'Haruki Murakami'))
-            .and_return(@response)
-          @client.reviews({:author => 'Haruki Murakami'})
+          @client.reviews({:isbn => '12345', :title => 'title',
+                            :author => 'author'})
         end
       end
 
