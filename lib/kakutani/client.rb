@@ -33,7 +33,7 @@ module Kakutani
         )
       end
 
-      if isbn.downcase.gsub(/\-/, '') =~ /^([\da-z]{10}|\d[a-z]{13})$/
+      if isbn.downcase.gsub(/\-/, '') =~ /^([\da-z]{10}|[\da-z]{13})$/
         return reviews_by_hash({:isbn => isbn})
       end
       raise ParameterError.new "\"#{isbn}\" is not an ISBN"
