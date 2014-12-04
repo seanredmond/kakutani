@@ -16,3 +16,6 @@ matrix:
     - rvm: rbx-2.0.0
     - rvm: 1.8.7
     - rvm: jruby-18mode
+addons:
+  code_climate:
+    repo_token: 859c9bf7a56a6c0b9cb547530b83da7b1406ce5bb5649da41ffdca50ea6374b0
