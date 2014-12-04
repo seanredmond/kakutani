@@ -11,7 +11,15 @@ module Kakutani
     def reviews(spec)
       revs = nil
       if spec.is_a?(Hash)
-        revs = reviews_by_isbn(spec[:isbn]) if spec.has_key?(:isbn)
+        if spec.has_key?(:isbn)
+          revs = reviews_by_isbn(spec[:isbn]) 
+        elsif spec.has_key?(:title)
+          revs = reviews_by_title(spec[:title])
+        else
+          raise ParameterError.new(
+            "No recognized parameter in #{spec.keys.join(', ')}"
+          )
+        end
       else
         revs = reviews_by_isbn(spec)
       end
@@ -31,6 +39,10 @@ module Kakutani
         return get_endpoint("reviews/#{isbn}")
       end
       raise ParameterError.new "\"#{isbn}\" is not an ISBN"
+    end
+
+    def reviews_by_title(title)
+      return get_endpoint("reviews", {:title => title})
     end
 
     def get_endpoint(path, params={})

@@ -49,7 +49,6 @@ describe Kakutani::Client do
     end
 
     context "with a hash as parameter" do
-
       context "including :isbn" do
         before :each do
           @r = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
@@ -64,11 +63,39 @@ describe Kakutani::Client do
           @client.reviews({:isbn => '9781446484197'})
         end
 
-        it "should use :isb over other parameters" do
+        it "should use :isbn over other parameters" do
           expect(@client).to receive(:reviews_by_isbn).with('9781446484197')
             .and_return({})
 
           @client.reviews({:isbn => '9781446484197', :title => '1Q84'})
+        end
+      end
+
+      context "including :title" do
+        before :each do
+          @r = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
+                      :status => 500)
+          allow_any_instance_of(Faraday::Connection).to receive(:get).
+            and_return(@r)
+        end
+
+        it "should call #reviews_by_title" do
+          expect(@client).to receive(:reviews_by_title).with('Gone Girl')
+            .and_return({})
+          @client.reviews({:title => 'Gone Girl'})
+        end
+
+        it "should use :title over :author" do
+          expect(@client).to receive(:reviews_by_title).with('Gone Girl')
+            .and_return({})
+          @client.reviews({:title => 'Gone Girl', :author => 'Gillian Flynn'})
+        end
+      end
+
+      context "without any good parameter" do
+        it "should raise a ParameterError" do
+          expect{ @client.reviews({:bad => 'parameter'}) }
+            .to raise_error(Kakutani::ParameterError)
         end
       end
     end
