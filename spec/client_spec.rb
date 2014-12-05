@@ -6,11 +6,38 @@ describe Kakutani::Client do
 
     @response = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
                        :status => 200)
+    @lists    = double(Faraday::Response, :body => LIST_NAMES, :headers => {},
+                       :status => 200)
 
     allow_any_instance_of(Faraday::Connection).to receive(:get).
       and_return(@response)
   end
 
+  describe '#bestseller_lists' do
+    before :each do
+      allow_any_instance_of(Faraday::Connection).to receive(:get).
+        and_return(@lists)
+    end
+      
+    it "should make a request to the right endpoint" do
+      expect_any_instance_of(Faraday::Connection)
+        .to receive(:get)
+        .with("http://api.nytimes.com/svc/books/v3/lists/names.json", 
+              instance_of(Hash))
+        .and_return(@lists)
+      @client.bestseller_lists
+    end
+
+    it "should return an array" do
+      expect(@client.bestseller_lists).to be_an_instance_of(Array)
+    end
+
+    it "should return an array of ListName objects" do
+      expect(@client.bestseller_lists.first)
+        .to be_an_instance_of(Kakutani::Bestsellers::ListName)
+    end
+  end
+    
   describe "#reviews" do
     context "with an ISBN as the only parameter" do
       it "should make a request with the isbn URL" do

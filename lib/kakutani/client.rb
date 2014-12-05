@@ -8,6 +8,12 @@ module Kakutani
       @conn = Faraday.new(:url => @@server)
     end
 
+    def bestseller_lists
+      get_endpoint(Bestsellers::ListName.path).map{|l|
+        Bestsellers::ListName.new(l)
+      }
+    end
+
     def reviews(spec)
       revs = nil
       if spec.is_a?(Hash)
