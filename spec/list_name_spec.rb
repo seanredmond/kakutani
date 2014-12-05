@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Kakutani::Review do
+describe Kakutani::Bestsellers::ListName do
   before :each do
     @list = Kakutani::Bestsellers::ListName.new(JSON.parse(LIST_NAMES)['results'].first)
   end
