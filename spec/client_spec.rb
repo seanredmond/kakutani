@@ -37,6 +37,29 @@ describe Kakutani::Client do
         .to be_an_instance_of(Kakutani::Bestsellers::ListName)
     end
   end
+
+  describe "#bestseller_list" do
+    before :each do
+      allow_any_instance_of(Faraday::Connection).to receive(:get).
+        and_return(@lists)
+    end
+      
+    it "should make a request to the right endpoint" do
+      expect_any_instance_of(Faraday::Connection)
+        .to receive(:get)
+        .with("http://api.nytimes.com/svc/books/v3/lists/2014-12-01/trade-fiction-paperback.json", 
+              instance_of(Hash))
+        .and_return(@lists)
+      @client.bestseller_list(Date.new(2014, 12, 1), 'trade-fiction-paperback')
+    end
+
+    it "should return a List object" do
+      expect(@client.bestseller_list(Date.new(2014, 12, 1), 
+                                     'trade-fiction-paperback'))
+        .to be_an_instance_of(Kakutani::Bestsellers::List)
+    end
+  end
+
     
   describe "#reviews" do
     context "with an ISBN as the only parameter" do

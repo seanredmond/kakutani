@@ -14,6 +14,10 @@ module Kakutani
       }
     end
 
+    def bestseller_list(date, name)
+      Bestsellers::List.new(get_endpoint(Bestsellers::List::path(date, name)))
+    end
+
     def reviews(spec)
       revs = nil
       if spec.is_a?(Hash)

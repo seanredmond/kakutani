@@ -8,6 +8,7 @@ require "kakutani/client"
 require "kakutani/error"
 require "kakutani/version"
 require "kakutani/bestsellers"
+require "kakutani/bestsellers/list"
 require "kakutani/bestsellers/list_name"
 
 module Kakutani
