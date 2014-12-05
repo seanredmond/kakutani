@@ -5,6 +5,26 @@ describe Kakutani::Bestsellers::ListName do
     @list = Kakutani::Bestsellers::ListName.new(JSON.parse(LIST_NAMES)['results'].first)
   end
 
+  describe "#oldest" do
+    it "should be a Date" do
+      expect(@list.oldest).to be_an_instance_of Date
+    end
+
+    it "should be the correct date" do
+      expect(@list.oldest).to eq Date.new(2011, 2, 13)
+    end
+  end
+
+  describe "#newest" do
+    it "should be a Date" do
+      expect(@list.newest).to be_an_instance_of Date
+    end
+
+    it "should be the correct date" do
+      expect(@list.newest).to eq Date.new(2014, 12, 7)
+    end
+  end
+
   describe "basic properties" do
     it "has #display_name" do
       expect(@list.display_name).to eq "Combined Print & E-Book Fiction"
@@ -29,8 +49,6 @@ describe Kakutani::Bestsellers::ListName do
     it "has #updated" do
       expect(@list.updated).to eq "WEEKLY"
     end
-
-
   end
 end
 
