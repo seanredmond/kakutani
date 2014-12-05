@@ -22,7 +22,7 @@ module Kakutani
         revs = reviews_by_isbn(spec)
       end
  
-      revs.map{|r| Kakutani::Review.new(r)}
+      revs.map{|r| Bookreviews::Review.new(r)}
     end
 
     def reviews_by_isbn(isbn)
@@ -40,7 +40,7 @@ module Kakutani
     end
 
     def reviews_by_hash(spec)
-      return get_endpoint("reviews", spec)
+      return get_endpoint(Bookreviews::Review::path, spec)
     end
 
     def get_endpoint(path, params={})
@@ -50,7 +50,7 @@ module Kakutani
     end
 
     def endpoint(path)
-      "#{@@base_uri}/#{path}.json"
+      "#{path}.json"
     end
   end
 end

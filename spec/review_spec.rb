@@ -1,8 +1,9 @@
 require "spec_helper"
 
-describe Kakutani::Review do
+describe Kakutani::Bookreviews::Review do
   before :each do
-    @review = Kakutani::Review.new(JSON.parse(ISBN_1Q84)['results'].first)
+    @review = Kakutani::Bookreviews::Review
+      .new(JSON.parse(ISBN_1Q84)['results'].first)
   end
 
   describe "basic properties" do

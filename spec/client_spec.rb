@@ -16,7 +16,7 @@ describe Kakutani::Client do
       it "should make a request with the isbn URL" do
         expect_any_instance_of(Faraday::Connection)
           .to receive(:get)
-          .with("/svc/books/v3/reviews.json", 
+          .with("http://api.nytimes.com/svc/books/v3/reviews.json", 
                 hash_including(:isbn => '9781446484197'))
           .and_return(@response)
         @client.reviews('9781446484197')
@@ -41,7 +41,7 @@ describe Kakutani::Client do
 
       it "should return an array of Review objects" do
         expect(@client.reviews('9781446484197').first)
-          .to be_an_instance_of(Kakutani::Review)
+          .to be_an_instance_of(Kakutani::Bookreviews::Review)
       end
 
       context "but passed as a number" do
@@ -74,7 +74,7 @@ describe Kakutani::Client do
         it "should make a request with the right parameters" do
           expect_any_instance_of(Faraday::Connection)
             .to receive(:get)
-            .with("/svc/books/v3/reviews.json", 
+            .with("http://api.nytimes.com/svc/books/v3/reviews.json", 
                   hash_including(:isbn => '12345', :title => 'title',
                                  :author => 'author'))
             .and_return(@response)
