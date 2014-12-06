@@ -4,13 +4,14 @@ describe Kakutani::Client do
   before :each do
     @client = Kakutani::Client.new('fakeapikey')
 
-    @response = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
+    @response   = double(Faraday::Response, :body => ISBN_1Q84, :headers => {},
                        :status => 200)
-    @lists    = double(Faraday::Response, :body => LIST_NAMES, :headers => {},
+    @lists      = double(Faraday::Response, :body => LIST_NAMES, :headers => {},
                        :status => 200)
-    @list     = double(Faraday::Response, :body => TRADE_FIC, :headers => {},
+    @list       = double(Faraday::Response, :body => TRADE_FIC, :headers => {},
                        :status => 200)
-    
+    @no_results = double(Faraday::Response, :body => NO_RESULT, :headers => {},
+                       :status => 200)
 
     allow_any_instance_of(Faraday::Connection).to receive(:get).
       and_return(@response)
@@ -141,6 +142,18 @@ describe Kakutani::Client do
           expect{ @client.reviews({:bad => 'parameter'}) }
             .to raise_error(Kakutani::ParameterError)
         end
+      end
+    end
+  end
+
+  describe "#get_endpoint" do
+    context "when there are no results" do
+      it "Should raise a NoResultsError" do
+        expect_any_instance_of(Faraday::Connection)
+          .to receive(:get).and_return(@no_results)
+        expect{
+          @client.bestseller_list(Date.new(2014, 12, 1), 'hardcover-advice')
+        }.to raise_error(Kakutani::NoResultsError)
       end
     end
   end

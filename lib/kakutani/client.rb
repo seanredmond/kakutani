@@ -56,7 +56,14 @@ module Kakutani
     def get_endpoint(path, params={})
       params.merge!({'api-key' => @api_key})
       response = @conn.get endpoint(path), params
-      return JSON.parse(response.body)["results"] if response.status == 200
+      if response.status == 200
+        data = JSON.parse(response.body)
+        if data['num_results'] > 0
+          return data["results"]
+        else
+          raise Kakutani::NoResultsError.new "No results"
+        end
+      end
     end
 
     def endpoint(path)
