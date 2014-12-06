@@ -41,12 +41,13 @@ module Kakutani
     #   Frequency with which the list is updated. Example: "WEEKLY"
     #   @return [String]
     class List < Resource
-      attr_reader :date, :published, :name
+      attr_reader :date, :published, :name, :books
       def initialize(data)
         super(data)
         @date = Date.strptime(bestsellers_date)
         @published = Date.strptime(published_date)
         @name = list_name
+        @books = data['books'].map{|b| Title.new(b)}
       end
 
       # URL of the API endpoint for this data

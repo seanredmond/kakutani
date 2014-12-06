@@ -29,6 +29,10 @@ describe Kakutani::Bestsellers::List do
     it "is an Array" do
       expect(@list.books).to be_an_instance_of Array
     end
+
+    it "is an Array of Title objects" do
+      expect(@list.books.first).to be_an_instance_of(Kakutani::Bestsellers::Title)
+    end
   end
 
   describe "#corrections" do
