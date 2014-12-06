@@ -54,7 +54,7 @@ describe Kakutani::Client do
         .with("http://api.nytimes.com/svc/books/v3/lists/2014-12-01/trade-fiction-paperback.json", 
               instance_of(Hash))
         .and_return(@list)
-      @client.bestseller_list(Date.new(2014, 12, 1), 'trade-fiction-paperback')
+      @client.bestseller_list('trade-fiction-paperback', Date.new(2014, 12, 1))
     end
 
     it "should return a List object" do

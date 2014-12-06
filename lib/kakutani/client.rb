@@ -27,6 +27,9 @@ module Kakutani
     end
 
     # Get a bestseller list
+    # @param name [String] The name of the list. Valid names can be retrieved
+    #   by getting the {Kakutani::Bestsellers::ListName#list_name_encoded} 
+    #   values from {#bestseller_lists}.
     # @param date [Date] The date of the list. Valid dates for a particular
     #   list can be retrieved by getting the 
     #   {Bestsellers::ListName#oldest} and {Bestsellers::ListName#newest}
@@ -42,18 +45,15 @@ module Kakutani
     #   Requesting a list outside the retrievable date ranges will raise a
     #   {Kakutani::NoResultsError}
     # 
-    # @param name [String] The name of the list. Valid names can be retrieved
-    #   by getting the {Kakutani::Bestsellers::ListName#list_name_encoded} 
-    #   values from {#bestseller_lists}.
     # @return [Bestsellers::List]
     # @raise [NoResultsError] if there are no results for the date of the 
     #   requested list
     # @example Checking the Publication Date of a List
     #   # Assuming c is a Client object
-    #   > c.bestseller_list(Date.new(2014,10,1), 'hardcover-nonfiction').published.to_s
+    #   > c.bestseller_list('hardcover-nonfiction', Date.new(2014,10,1)).published.to_s
     #   => "2014-10-05"
     # 
-    def bestseller_list(date, name)
+    def bestseller_list(name, date=Date::today)
       Bestsellers::List.new(get_endpoint(Bestsellers::List::path(date, name)))
     end
 
@@ -74,6 +74,7 @@ module Kakutani
       revs.map{|r| Bookreviews::Review.new(r)}
     end
 
+    private
     def reviews_by_isbn(isbn)
       # Thinking you can use an integer for an ISBN is an obvious mistake
       if ! isbn.is_a?(String)
