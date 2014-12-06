@@ -8,6 +8,9 @@ describe Kakutani::Client do
                        :status => 200)
     @lists    = double(Faraday::Response, :body => LIST_NAMES, :headers => {},
                        :status => 200)
+    @list     = double(Faraday::Response, :body => TRADE_FIC, :headers => {},
+                       :status => 200)
+    
 
     allow_any_instance_of(Faraday::Connection).to receive(:get).
       and_return(@response)
@@ -41,7 +44,7 @@ describe Kakutani::Client do
   describe "#bestseller_list" do
     before :each do
       allow_any_instance_of(Faraday::Connection).to receive(:get).
-        and_return(@lists)
+        and_return(@list)
     end
       
     it "should make a request to the right endpoint" do
@@ -49,7 +52,7 @@ describe Kakutani::Client do
         .to receive(:get)
         .with("http://api.nytimes.com/svc/books/v3/lists/2014-12-01/trade-fiction-paperback.json", 
               instance_of(Hash))
-        .and_return(@lists)
+        .and_return(@list)
       @client.bestseller_list(Date.new(2014, 12, 1), 'trade-fiction-paperback')
     end
 
