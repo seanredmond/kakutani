@@ -205,7 +205,4 @@ describe Kakutani::Bestsellers::Title do
     end
   end
 end
-  
-# "rank", "rank_last_week", "weeks_on_list", "asterisk", "dagger", "primary_isbn10", "primary_isbn13", "publisher", "description", "price", "title", "author", "contributor", "contributor_note", "book_image", "amazon_product_url", "age_group", "book_review_link", "first_chapter_link", "sunday_review_link", "article_chapter_link"
 
-#, "isbns"
