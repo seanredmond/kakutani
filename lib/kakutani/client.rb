@@ -11,6 +11,14 @@ module Kakutani
       @conn = Faraday.new(:url => @@server)
     end
 
+    # Get list of recognized age groups
+    # @return [Array<Bestsellers::AgeGroup>]
+    def age_groups
+      get_endpoint(Bestsellers::AgeGroup.path).map{|g|
+        Bestsellers::AgeGroup.new(g)
+      }
+    end
+
     # Get a list of all available bestseller lists. This is first stop to get
     # the parameter values you will need to request Bestseller data from 
     # {#bestseller_list}. Requesting a list requires a list name and a date,
