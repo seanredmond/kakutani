@@ -7,6 +7,7 @@ require "kakutani/bookreviews/review"
 require "kakutani/client"
 require "kakutani/error"
 require "kakutani/version"
+require "kakutani/isbns"
 require "kakutani/bestsellers"
 require "kakutani/bestsellers/list"
 require "kakutani/bestsellers/list_name"
@@ -18,7 +19,4 @@ module Kakutani
   def self.path(sub)
     ([@url] + sub).join('/')
   end
-
-  # Pairs of ISBNs with equivalent ISBN10 and ISBN13 versions
-  Isbns = Struct.new(:isbn10, :isbn13)
 end
