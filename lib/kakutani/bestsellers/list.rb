@@ -16,12 +16,15 @@ module Kakutani
     #   @return [String]
     #
     # @!method date
-    #   The date of the list. In most instances you want to refer to 
-    #   {#published} instead
+    #   The date of the end of the week for which the rankings were
+    #   compiled. This differs from {#published} because of the lag in
+    #   collecting data.
+    #   @see #published
     #   @return [Date]
     #
     # @!method published
-    #   The date the list was published in the New York Times
+    #   The date the list was published in the New York Times.
+    #   @see #date
     #   @return [Date]
     #
     # @!method books
