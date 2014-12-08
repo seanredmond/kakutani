@@ -66,9 +66,9 @@ module Kakutani
     end
 
     def bestsellers_search(list, params)
-      Bestsellers::Search
-        .new(get_endpoint(Bestsellers::Search::path, 
-                          params.merge!({'list-name' => list})))
+      get_endpoint(Bestsellers::Search::path, 
+                   params.merge!({'list-name' => list}))
+        .map{|s| Bestsellers::Search.new(s)}
     end
 
     def reviews(spec)

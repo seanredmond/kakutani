@@ -82,6 +82,13 @@ describe Kakutani::Client do
       @client.bestsellers_search('trade-fiction-paperback', 
                               {'isbn' => '9780425273869'})
     end
+
+    it "should return an Array" do
+      expect(@client
+               .bestsellers_search('trade-fiction-paperback', 
+                                   {'isbn' => '9780425273869'})
+             ).to be_an_instance_of(Array)
+    end
   end
 
   describe "#reviews" do
