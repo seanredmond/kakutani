@@ -65,6 +65,12 @@ module Kakutani
       Bestsellers::List.new(get_endpoint(Bestsellers::List::path(date, name)))
     end
 
+    def bestsellers_search(list, params)
+      Bestsellers::Search
+        .new(get_endpoint(Bestsellers::Search::path, 
+                          params.merge!({'list-name' => list})))
+    end
+
     def reviews(spec)
       revs = nil
       if spec.is_a?(Hash)

@@ -12,6 +12,8 @@ describe Kakutani::Client do
                        :status => 200)
     @no_results = double(Faraday::Response, :body => NO_RESULT, :headers => {},
                        :status => 200)
+    @search     = double(Faraday::Response, :body => SEARCH, :headers => {},
+                       :status => 200)
 
     allow_any_instance_of(Faraday::Connection).to receive(:get).
       and_return(@response)
@@ -64,7 +66,24 @@ describe Kakutani::Client do
     end
   end
 
+  describe "#bestseller_search" do
+    before :each do
+      allow_any_instance_of(Faraday::Connection).to receive(:get).
+        and_return(@search)
+    end
     
+    it "should make a request to the right endpoint" do
+      expect_any_instance_of(Faraday::Connection)
+        .to receive(:get)
+        .with("http://api.nytimes.com/svc/books/v3/lists.json", 
+              hash_including('list-name' => 'trade-fiction-paperback',
+                             'isbn' => '9780425273869'))
+        .and_return(@search)
+      @client.bestsellers_search('trade-fiction-paperback', 
+                              {'isbn' => '9780425273869'})
+    end
+  end
+
   describe "#reviews" do
     context "with an ISBN as the only parameter" do
       it "should make a request with the isbn URL" do

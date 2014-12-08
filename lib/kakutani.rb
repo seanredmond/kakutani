@@ -12,6 +12,7 @@ require "kakutani/bestsellers"
 require "kakutani/bestsellers/age_group"
 require "kakutani/bestsellers/list"
 require "kakutani/bestsellers/list_name"
+require "kakutani/bestsellers/search"
 require "kakutani/bestsellers/title"
 
 # Library for accessing New York Times Books API
