@@ -45,12 +45,12 @@ module Kakutani
     #   @return [String]
     class List < Resource
       attr_reader :date, :published, :name, :books
-      def initialize(data)
+      def initialize(data, opts={})
         super(data)
-        @date = Date.strptime(bestsellers_date)
-        @published = Date.strptime(published_date)
-        @name = list_name
-        @books = data['books'].map{|b| Title.new(b)}
+        @date      = opt_date(data['bestsellers_date'], opts[:list_date])
+        @published = opt_date(data['published_date'], opts[:pub_date])
+        @name      = list_name
+        @books     = data['books'].map{|b| Title.new(b)}
       end
 
       # URL of the API endpoint for this data
@@ -59,6 +59,16 @@ module Kakutani
       # @return [String]
       def self.path(date, name)
         Bestsellers::path([date.to_s, name])
+      end
+
+      private
+      # Get list date from data or optional params
+      def opt_date(from_data, opt_date=nil)
+        if opt_date.nil?
+          return nil if from_data.nil?
+          return Date.strptime(from_data)
+        end
+        return Date.strptime(opt_date)
       end
     end
   end

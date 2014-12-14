@@ -82,13 +82,14 @@ module Kakutani
     #   URL for sample chapter of the title
     #   @return [String]
     class Title < Resource
+      attr_reader :created, :updated
       def initialize(data)
         super(data)
         @primary_isbns = Kakutani::Isbns.new(primary_isbn10, primary_isbn13)
         @price = data['price'].to_f
-        @isbns = data['isbns'].map{|i| 
-          Kakutani::Isbns.new(i['isbn10'], i['isbn13'])
-        }
+        @isbns = get_isbns(data['isbns'])
+        @created = data['created_date'].nil? ? nil : Date.strptime(data['created_date'])
+        @updated = data['updated_date'].nil? ? nil : Date.strptime(data['updated_date'])
       end
 
 
@@ -123,9 +124,19 @@ module Kakutani
       end
 
       # All isbns that can be associated with the title
+      # @note #isbns returns an empty array for Title objects returned from 
+      # Overview objects
       # @return [Array<Kakutani::Isbns>]
       def isbns
         @isbns
+      end
+
+      private
+      def get_isbns(nums)
+        return [] if nums.nil?
+        return nums.map{|i| 
+          Kakutani::Isbns.new(i['isbn10'], i['isbn13'])
+        }
       end
     end
   end

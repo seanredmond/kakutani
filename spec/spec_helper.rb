@@ -9,6 +9,7 @@ LIST_NAMES = IO.read(File.join(cwd, "responses", "lists-names.json"))
 TRADE_FIC  = IO.read(File.join(cwd, "responses", "trade-fiction.json"))
 NO_RESULT  = IO.read(File.join(cwd, "responses", "no-results.json"))
 SEARCH     = IO.read(File.join(cwd, "responses", "search.json"))
+OVERVW     = IO.read(File.join(cwd, "responses", "overview.json"))
 
 # Basic book as it appears on a bestseller list. Did not appear on the previous
 # list

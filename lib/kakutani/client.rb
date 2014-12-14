@@ -71,6 +71,10 @@ module Kakutani
         .map{|s| Bestsellers::Search.new(s)}
     end
 
+    def bestsellers_overview(date=Date::today)
+      Bestsellers::Overview.new(get_endpoint(Bestsellers::Overview::path))
+    end
+
     def reviews(spec)
       revs = nil
       if spec.is_a?(Hash)
